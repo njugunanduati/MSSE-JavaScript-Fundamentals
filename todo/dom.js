@@ -1,27 +1,49 @@
 const $h2 = document.querySelector("h2")
-
 const $list = document.querySelector("#my-list")
-
-const addItem = (text) => {
-    let $item = document.createElement("li")
-    $item.textContent = text
-    $list.append($item)
-}
-addItem("Eat")
-
+const $addButton = document.querySelector("#addBtn")
+$addButton.addEventListener("click", addItem)
 let $items = $list.getElementsByTagName("li")
-let $count = $items.length
-$h2.textContent = `Ken's To Do List (${$count} left!)`
+let $buttons = $list.getElementsByTagName("button")
+let num = $items.length
 
-const removeItem = (index) => {
-    $items[index].remove()
+function addItem(){
+    let $input = document.querySelector("#myInput")
+    let $item = document.createElement("li")
+    $item.textContent = $input.value
+    $item.addEventListener("click", strikeItem)
+    addButton($item)
+    $input.value = ""
+    $list.append($item)
+    num += 1
+    update()
 }
 
-
-const strikeItem = (index) => {
-    $items[index].setAttribute("class", "strike")
-    $count -= 1
-    $h2.textContent = `Ken's To Do List (${$count} left!)`
+function addButton(item) {
+    let btn = document.createElement("button")
+    btn.textContent = "X"
+    item.append(btn)
+    btn.addEventListener("click", removeItem)
 }
 
-$h2.textContent = `Ken's To Do List (${$count} left!)`
+function removeItem() {
+    this.parentNode.remove()
+    update()
+}
+
+function strikeItem() {
+    this.classList.toggle("strike")
+    update()
+}
+
+for (const button of $buttons) {
+    button.addEventListener("click", removeItem)
+}
+
+for (const item of $items) {
+    item.addEventListener("click", strikeItem)
+}
+
+function update() {
+    $h2.textContent = `Ken's To Do List (${num} left!)`
+}
+$h2.textContent = `Ken's To Do List (${num} left!)`
